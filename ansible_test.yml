@@ -1,0 +1,6 @@
+- hosts: node1
+  gather_facts: True
+  #become: yes
+  tasks:
+    #- include: tasks/task1.yml
+    - include: tasks/task2.yml

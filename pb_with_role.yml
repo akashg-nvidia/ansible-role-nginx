@@ -1,0 +1,6 @@
+- hosts: Docker
+  gather_facts: True
+  #become: yes
+  roles:
+    - nginx
+    - random_role

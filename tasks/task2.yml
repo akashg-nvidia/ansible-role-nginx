@@ -1,0 +1,82 @@
+    - name: try ping cmnd
+      ping:
+
+    - name: test loop {{ random_var }}
+      shell: echo {{ item }}
+      with_items:
+        - test1234
+        - test1234
+        - dev1234
+    - block:
+      - name: List root
+        command: "ls /"
+
+      - name: This will fail
+        command: "ls /nonexistent/directory"
+
+      rescue:
+        - name: Only run when a task inside the block throws an error.
+          debug: msg="Something went wrong. {{ random_var }}"
+
+      always:
+        - name: Always run.
+          debug: msg="Regardless of what happened above, we're done with this block! {{ random_var}}"
+
+    - name: A simple debug statement
+      debug: msg="Test debugging"
+
+    - name: test uptime and Register
+      shell: /usr/bin/uptime
+      register: myuptime
+
+    - name: debug uptime
+      debug: var=myuptime.rc
+
+    # - name: debug verbose1
+    #   debug: var=myuptime verbosity=1
+    #
+    # - name: debug verbose1
+    #   debug: var=myuptime verbosity=2
+
+
+    ## Register
+    - stat: path=/home/mattermost/mattermost_app
+      register: mattermost_install
+
+    - shell: whoami
+      register: user_name
+
+    - name: Debug user_name
+      debug: var=user_name
+
+    - name: Debug mattermost_install
+      debug: var=mattermost_install
+
+    - name: Debug user_name.stdout
+      debug: msg="{{ user_name.stdout }}"
+
+    - name: Debug user_name.stderr
+      debug: msg="{{ user_name.stderr }}"
+
+    - name: Debug mattermost_install.stat.exists
+      debug: msg="{{ mattermost_install.stat.exists }}"
+
+
+
+    ## changed_when and failed_when -- controlling when tasks show as "changed" or "failed."
+    - command: "apt-get upgrade -y"
+      register: apt_upgrade
+      changed_when: "'1 upgraded, 0 newly installed' in apt_upgrade.stdout"
+      # changed_when: "'Processing' in apt_upgrade.stdout"
+    - name: debug apt-upgraded
+      debug: var=apt_upgrade
+
+    - command: "ls /some/nonexistent/dir"
+      register: mylisting
+      failed_when: "'foo' not in mylisting.stderr"
+
+
+    ## The 'defined' keyword
+    - name: Check if a variable is defined
+      debug: msg="Yes, myvariable is defined."
+      when: myvariable is defined

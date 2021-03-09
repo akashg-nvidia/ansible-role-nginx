@@ -1,0 +1,7 @@
+
+node1 ansible_host=192.168.1.134 ansible_ssh_user=akashg ansible_ssh_pass=akash123
+[Docker]
+target1 ansible_host=172.17.0.2 ansible_ssh_pass=Passw0rd
+target2 ansible_host=172.17.0.3 ansible_ssh_pass=Passw0rd
+[Default]
+192.168.1.134
